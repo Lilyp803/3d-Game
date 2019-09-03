@@ -34,7 +34,8 @@ public class playerscript : MonoBehaviour {
 	private float timerSpeed = 0.5f;
 	private float lastTimeStamp;
 	private bool canmineorplace = true;
-		void Start()
+	private Vector3 test = new Vector3(1, 0, 0);
+	void Start()
 	{
 		rb = GetComponent<Rigidbody>();
 		col = GetComponent<CapsuleCollider>();
@@ -119,32 +120,104 @@ public class playerscript : MonoBehaviour {
 						{
 							if (ViewJoystick.Horizontal == 0 && ViewJoystick.Vertical == 0)
 							{
-								if (canmineorplace == true)
+							if (canmineorplace == true)
+							{
+
+								if (hit.point.x == selection.position.x + 0.5)
 								{
-									if (Destroyjoybutton.Pressed)
-									{
-										lastTimeStamp = Time.time;
-										Destroy(selection.gameObject);
-									}
-									if (Placejoybutton.Pressed)
-									{
-										lastTimeStamp = Time.time;
-									Instantiate(
-										Prefab
-										,
-										selection.position + new Vector3(0, 1f, 0)
-										,
-										new Quaternion());
-									}
+									test = new Vector3(0.5f, 0, 0);
+									Debug.Log("x");
+								}
+								if (hit.point.x == selection.position.x - 0.5)
+								{
+									test = new Vector3(-0.5f, 0, 0);
+									Debug.Log("-x");
+								}
+								if (hit.point.y == selection.position.y + 0.5)
+								{
+									test = new Vector3(0.5f, 1f, 0);
+									Debug.Log("y");
+								}
+								if (hit.point.y == selection.position.y - 0.5)
+								{
+									test = new Vector3(0.5f, -1f, 0);
+									Debug.Log("-y");
+								}
+								if (hit.point.z == selection.position.z + 0.5)
+								{
+									test = new Vector3(0.5f, 0f, 1f);
+									Debug.Log("z");
+								}
+								if (hit.point.z == selection.position.z - 0.5)
+								{
+									test = new Vector3(0.5f, 0f, 0f);
+									Debug.Log("-z");
 								}
 
+
+								if (Destroyjoybutton.Pressed)
+								{
+									lastTimeStamp = Time.time;
+									Destroy(selection.gameObject);
+								}
+								if (Placejoybutton.Pressed)
+								{
+									lastTimeStamp = Time.time;
+									if (hit.point.y == selection.position.y + 0.5)
+									{
+										Instantiate(
+											Prefab
+											,
+											(new Vector3(Mathf.Round(hit.point.x - 0.5f), Mathf.Round(hit.point.y - 0.5f), Mathf.Round(hit.point.z)) + test)
+											,
+											new Quaternion());
+									}
+									else if (hit.point.y == selection.position.y - 0.5)
+									{
+										Instantiate(
+												Prefab
+												,
+												(new Vector3(Mathf.Round(hit.point.x - 0.5f), Mathf.Round(hit.point.y + 0.5f), Mathf.Round(hit.point.z)) + test)
+												,
+												new Quaternion());
+									}
+									else if (hit.point.z == selection.position.z + 0.5)
+									{
+										Instantiate(
+												Prefab
+												,
+												(new Vector3(Mathf.Round(hit.point.x - 0.5f), Mathf.Round(hit.point.y - 0.5f), Mathf.Round(hit.point.z - 0.5f)) + test)
+												,
+												new Quaternion());
+
+									}
+									else if (hit.point.z == selection.position.z - 0.5)
+									{
+										Instantiate(
+												Prefab
+												,
+												(new Vector3(Mathf.Round(hit.point.x - 0.5f), Mathf.Round(hit.point.y - 0.5f), Mathf.Round(hit.point.z - 0.5f)) + test)
+												,
+												new Quaternion());
+									}
+									else
+									{
+										Instantiate(
+											Prefab
+											,
+											(new Vector3(Mathf.Round(hit.point.x), Mathf.Round(hit.point.y), Mathf.Round(hit.point.z)) + test)
+											,
+											new Quaternion());
+									}
+									}
+								}		
 							}
 						}
 					selection.GetComponent<Renderer>().material = highlightMaterial;
 					}
 					_selection = selection;
 				}
-			}
+		}
 	}
 
 	private bool isGrounded()
